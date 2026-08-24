@@ -299,33 +299,51 @@ export function WebMCPTools() {
   if (isLoading) return null;
 
   return (
-    <div className="group fixed bottom-3 right-3 z-50">
-      {supported && (
-        <div
-          className="pointer-events-none absolute bottom-full right-0 mb-2 w-[27rem] max-w-[calc(100vw-2rem)] rounded-xl border border-stone-200 bg-white p-4 opacity-0 shadow-xl transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100 motion-reduce:transition-none"
-          role="tooltip"
+    <div className="fixed bottom-3 right-3 z-50 flex items-center gap-2">
+      <a
+        href="https://github.com/vincanger/webmcp-espresso-store"
+        target="_blank"
+        rel="noreferrer noopener"
+        aria-label="View the source on GitHub"
+        title="View the source on GitHub"
+        className="rounded-full border border-stone-300 bg-white/95 p-1.5 text-stone-600 shadow transition-colors hover:bg-stone-100 hover:text-stone-900"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          aria-hidden="true"
+          className="h-4 w-4 fill-current"
         >
-          <div className="mb-2 flex items-baseline justify-between">
-            <span className="text-sm font-bold">WebMCP tools</span>
-            <span className="text-xs text-stone-400">
-              {registeredCount} of {tools.length} registered
-            </span>
+          <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27s-1.36.09-2 .27c-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z" />
+        </svg>
+      </a>
+      <div className="group relative">
+        {supported && (
+          <div
+            className="pointer-events-none absolute bottom-full right-0 mb-2 w-[27rem] max-w-[calc(100vw-2rem)] rounded-xl border border-stone-200 bg-white p-4 opacity-0 shadow-xl transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100 motion-reduce:transition-none"
+            role="tooltip"
+          >
+            <div className="mb-2 flex items-baseline justify-between">
+              <span className="text-sm font-bold">WebMCP tools</span>
+              <span className="text-xs text-stone-400">
+                {registeredCount} of {tools.length} registered
+              </span>
+            </div>
+            <ToolGroup title="Always available" tools={publicTools} />
+            <ToolGroup
+              title={loggedIn ? "Logged in" : "Requires login"}
+              tools={authTools}
+            />
+            <p className="mt-2 border-t border-stone-100 pt-2 text-[11px] leading-snug text-stone-400">
+              ● registered with the browser · ○ hidden until login ·{" "}
+              <span className="font-medium">✎</span> can change things
+            </p>
           </div>
-          <ToolGroup title="Always available" tools={publicTools} />
-          <ToolGroup
-            title={loggedIn ? "Logged in" : "Requires login"}
-            tools={authTools}
-          />
-          <p className="mt-2 border-t border-stone-100 pt-2 text-[11px] leading-snug text-stone-400">
-            ● registered with the browser · ○ hidden until login ·{" "}
-            <span className="font-medium">✎</span> can change things
-          </p>
+        )}
+        <div className="rounded-full border border-stone-300 bg-white/95 px-3 py-1.5 text-xs font-medium text-stone-600 shadow">
+          {supported
+            ? `WebMCP · ${registeredCount} tool${registeredCount === 1 ? "" : "s"}${loggedIn ? "" : " (log in for more)"}`
+            : "WebMCP unavailable"}
         </div>
-      )}
-      <div className="rounded-full border border-stone-300 bg-white/95 px-3 py-1.5 text-xs font-medium text-stone-600 shadow">
-        {supported
-          ? `WebMCP · ${registeredCount} tool${registeredCount === 1 ? "" : "s"}${loggedIn ? "" : " (log in for more)"}`
-          : "WebMCP unavailable"}
       </div>
     </div>
   );
