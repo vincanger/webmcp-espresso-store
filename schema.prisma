@@ -1,0 +1,125 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           Int           @id @default(autoincrement())
+  displayName  String?
+  region       String        @default("EU") // "EU" | "US" → voltage check
+  orders       Order[]
+  cartItems    CartItem[]
+  compareItems CompareItem[]
+  coupons      UserCoupon[]
+}
+
+enum Category {
+  MACHINE
+  GRINDER
+  PORTAFILTER
+  BASKET
+  TAMPER
+  PUCK_SCREEN
+  DOSING_FUNNEL
+  WDT_TOOL
+  WATER_FILTER
+  ACCESSORY
+}
+
+model Product {
+  id           Int      @id @default(autoincrement())
+  slug         String   @unique
+  name         String
+  brand        String
+  category     Category
+  priceCents   Int
+  currency     String   @default("EUR")
+  shortBlurb   String
+  imageUrl     String
+  sourceUrl    String? // manufacturer/retailer page the specs came from
+  colorOptions String[] @default([])
+  inStock      Boolean  @default(true)
+
+  // Typed compatibility fields (empty/null when not applicable)
+  basketMm               Int? // 58 | 54
+  pfStandards            String[] @default([]) // machines: standards the group ACCEPTS; portafilters: standard it PROVIDES. "E61" | "LELIT58" | "LM58" | "BREVILLE54"
+  pfMaybeStandards       String[] @default([]) // machines only: reported to fit, not guaranteed → UNKNOWN
+  voltage                Int? // 230 | 120
+  espressoCapable        Boolean? // grinders
+  compatibleMachineSlugs String[] @default([]) // water filters
+  isUniversal            Boolean  @default(false)
+
+  // Long-tail display specs: { key: { label, value, unit?, group } }
+  specs Json
+
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+  compareItems CompareItem[]
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  quantity  Int     @default(1)
+  color     String  @default("") // non-null on purpose: NULLs are distinct in Postgres unique indexes
+
+  @@unique([userId, productId, color])
+}
+
+model CompareItem {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  position  Int     @default(0)
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  placedAt   DateTime    @default(now())
+  totalCents Int
+  couponCode String?
+  items      OrderItem[]
+}
+
+model OrderItem {
+  id         Int     @id @default(autoincrement())
+  order      Order   @relation(fields: [orderId], references: [id])
+  orderId    Int
+  product    Product @relation(fields: [productId], references: [id])
+  productId  Int
+  quantity   Int
+  priceCents Int // price at time of purchase
+  color      String?
+}
+
+model Coupon {
+  code        String       @id
+  percentOff  Int
+  description String
+  userCoupons UserCoupon[]
+}
+
+model UserCoupon {
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  coupon     Coupon    @relation(fields: [couponCode], references: [code])
+  couponCode String
+  applied    Boolean   @default(false)
+  usedAt     DateTime?
+
+  @@unique([userId, couponCode])
+}
