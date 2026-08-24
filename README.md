@@ -16,13 +16,13 @@ A demo web store built with **Wasp 0.25** whose queries and actions are exposed 
 
 ```bash
 npm install && wasp install
-wasp db start
+wasp start db
 wasp db migrate-dev
 wasp db seed devSeed
 wasp start
 ```
 
-The app runs on **http://localhost:3000** (API on :3101 — configured in `vite.config.ts`, `.env.server`, `.env.client`; change these back to Vite/Wasp defaults if 3000/3001 are free on your machine).
+The app runs on **http://localhost:3000** (API on :3001). Run `wasp start db` in a separate terminal — Wasp starts a Postgres container and wires up `DATABASE_URL` for you.
 
 **Demo user:** `vince` / `espresso123` — owns a Lelit Mara X V2, a Lagom Casa grinder and a drawer of 58 mm accessories across 3 past orders; has coupon `BARISTA10` (10 %); compare list pre-loaded with the Linea Mini R and the Bianca V3.
 
@@ -43,7 +43,7 @@ The app runs on **http://localhost:3000** (API on :3101 — configured in `vite.
 
 Claude Desktop: the same `mcpServers` block in `claude_desktop_config.json` (Settings → Developer → Edit Config); use an absolute path to `npx` if Node isn't found. Before recording, set `execute_webmcp_tool` to "always allow" (Claude Code) / "Allow always" (Desktop) so takes aren't interrupted by permission prompts.
 
-Make sure the `localhost:3002` tab is the focused tab in the flagged Chrome — the badge bottom-right shows the live tool count: **16 tools logged in, 3 logged out** (the milestone plan says 17; its own tool table enumerates 16).
+Make sure the `localhost:3000` tab is the focused tab in the flagged Chrome — the badge bottom-right shows the live tool count: **16 tools logged in, 3 logged out** (the milestone plan says 17; its own tool table enumerates 16).
 
 ## Demo script
 
