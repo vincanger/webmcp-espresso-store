@@ -1,5 +1,7 @@
 # Crema & Co. — a WebMCP espresso store (Wasp demo)
 
+[![webmcp-espresso-shop](./public/webmcp-espresso-thumb.png)](https://x.com/hot_town/status/2092481550096924926)
+
 A demo web store built with **Wasp 0.25** whose queries and actions are exposed to AI agents via **WebMCP**. An agent connected to the browser tab can compare espresso machines, check compatibility against your past purchases, visually highlight the spec rows that drove its recommendation, and put the right items in the cart — with the UI updating live through Wasp's automatic query invalidation.
 
 ## Prerequisites
